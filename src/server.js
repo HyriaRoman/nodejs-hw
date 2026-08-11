@@ -38,6 +38,10 @@ app.get('/notes/:noteId', (req, res) => {
   });
 });
 
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

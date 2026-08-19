@@ -58,5 +58,29 @@ export async function deleteNote(req, res) {
 }
 
 export async function updateNote(req, res) {
-  res.status(200).json({});
+  const { noteId } = req.params;
+
+  // This is done to catch invalid note ids, and respond with
+  // "404 Not Found" instead of "500 Internal Error"
+  let noteObjectId;
+  try {
+    noteObjectId = new mongoose.Types.ObjectId(noteId);
+  } catch (err) {
+    console.error(`Invalid noteId: ${noteId}`, err);
+    return res.status(404).json({ message: `Note not found` });
+  }
+
+  const note = await Note.findOneAndUpdate(
+    {
+      _id: noteObjectId,
+    },
+    req.body,
+    { returnDocument: 'after' },
+  );
+
+  if (!note) {
+    res.status(404).json({ message: `Note not found` });
+  } else {
+    res.status(200).json(note);
+  }
 }

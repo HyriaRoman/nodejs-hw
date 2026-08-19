@@ -1,5 +1,8 @@
+import { Note } from "../models/notes.js";
+
 export async function getAllNotes(req, res) {
-  res.status(200).json([]);
+  const notes = await Note.find();
+  res.status(200).json(notes);
 }
 
 export async function getNoteById(req, res) {

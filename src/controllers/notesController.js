@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import createHttpError from 'http-errors';
+
 import { Note } from '../models/notes.js';
 
 export async function getAllNotes(req, res) {
@@ -14,18 +16,17 @@ export async function getNoteById(req, res) {
   let noteObjectId;
   try {
     noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch (err) {
-    console.error(`Invalid noteId: ${noteId}`, err);
-    return res.status(404).json({ message: `Note not found` });
+  } catch {
+    throw createHttpError(404, 'Note not found');
   }
 
   const note = await Note.findById(noteObjectId);
 
   if (!note) {
-    res.status(404).json({ message: `Note not found` });
-  } else {
-    res.status(200).json(note);
+    throw createHttpError(404, 'Note not found');
   }
+
+  res.status(200).json(note);
 }
 
 export async function createNote(req, res) {
@@ -41,9 +42,8 @@ export async function deleteNote(req, res) {
   let noteObjectId;
   try {
     noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch (err) {
-    console.error(`Invalid noteId: ${noteId}`, err);
-    return res.status(404).json({ message: `Note not found` });
+  } catch {
+    throw createHttpError(404, 'Note not found');
   }
 
   const note = await Note.findOneAndDelete({
@@ -51,10 +51,10 @@ export async function deleteNote(req, res) {
   });
 
   if (!note) {
-    res.status(404).json({ message: `Note not found` });
-  } else {
-    res.status(200).json(note);
+    throw createHttpError(404, 'Note not found');
   }
+
+  res.status(200).json(note);
 }
 
 export async function updateNote(req, res) {
@@ -65,9 +65,8 @@ export async function updateNote(req, res) {
   let noteObjectId;
   try {
     noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch (err) {
-    console.error(`Invalid noteId: ${noteId}`, err);
-    return res.status(404).json({ message: `Note not found` });
+  } catch {
+    throw createHttpError(404, 'Note not found');
   }
 
   const note = await Note.findOneAndUpdate(
@@ -79,8 +78,8 @@ export async function updateNote(req, res) {
   );
 
   if (!note) {
-    res.status(404).json({ message: `Note not found` });
-  } else {
-    res.status(200).json(note);
+    throw createHttpError(404, 'Note not found');
   }
+
+  res.status(200).json(note);
 }

@@ -9,6 +9,7 @@ export const notesSchema = new Schema(
     },
     content: {
       type: String,
+      default: '',
       trim: true,
     },
     tag: {
@@ -33,6 +34,5 @@ export const notesSchema = new Schema(
     versionKey: false,
   },
 );
-
 
 export const Note = model('Note', notesSchema);

@@ -3,13 +3,14 @@ import express from 'express';
 import cors from 'cors';
 
 import logger from './middleware/logger.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const PORT = process.env.PORT ?? 3000;
 const app = express();
 
+app.use(logger);
 app.use(express.json());
 app.use(cors());
-app.use(logger);
 
 app.get('/notes', (req, res) => {
   res.status(200).json({
@@ -32,13 +33,7 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
-  res.status(500).json({
-    message: 'Internal Server Error',
-    error: err.message,
-  });
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

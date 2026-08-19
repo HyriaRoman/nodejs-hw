@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
+import notFoundHandler from './middleware/notFoundHandler.js';
 
 const PORT = process.env.PORT ?? 3000;
 const app = express();
@@ -29,10 +30,7 @@ app.get('/test-error', () => {
   throw new Error('Simulated server error');
 });
 
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
-
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => {

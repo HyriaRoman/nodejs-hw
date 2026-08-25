@@ -4,8 +4,7 @@ import { isValidObjectId } from 'mongoose';
 
 function objectIdValidator(value, helpers) {
   return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
-};
-
+}
 
 export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
@@ -23,9 +22,9 @@ export const getAllNotesSchema = {
 
     tag: Joi.string()
       .default('')
-      .valid('', ...TAGS)
+      .valid(...TAGS)
       .messages({
-        'any.only': `\`tag\` must be either empty or one of: ${TAGS.join(', ')}`,
+        'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,
         'string.base': '`tag` must be a string',
       }),
 
@@ -38,5 +37,27 @@ export const getAllNotesSchema = {
 export const noteIdSchema = {
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required(),
+  }),
+};
+
+export const createNoteSchema = {
+  [Segments.BODY]: Joi.object({
+    title: Joi.string().min(1).required().messages({
+      'any.required': '`title` is required',
+      'string.base': '`title` must be a string',
+      'string.min': '`title` should have at least {#limit} characters',
+    }),
+
+    content: Joi.string().default('').min(1).default(10).messages({
+      'string.base': '`content` must be a string',
+    }),
+
+    tag: Joi.string()
+      .default('')
+      .valid(...TAGS)
+      .messages({
+        'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,
+        'string.base': '`tag` must be a string',
+      }),
   }),
 };

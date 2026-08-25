@@ -8,27 +8,34 @@ function objectIdValidator(value, helpers) {
 
 export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1).messages({
+    page: Joi.number().integer().optional().default(1).min(1).messages({
       'number.base': '`page` must be an integer',
       'number.integer': '`page` must be an integer',
       'number.min': '`page` must be at least {#limit}',
     }),
 
-    perPage: Joi.number().integer().min(1).default(10).messages({
-      'number.base': '`perPage` must be an integer',
-      'number.integer': '`perPage` must be an integer',
-      'number.min': '`perPage` must be at least {#limit}',
-    }),
+    perPage: Joi.number()
+      .integer()
+      .optional()
+      .default(10)
+      .min(5)
+      .max(20)
+      .messages({
+        'number.base': '`perPage` must be an integer',
+        'number.integer': '`perPage` must be an integer',
+        'number.min': '`perPage` must be at least {#limit}',
+        'number.max': '`perPage` must be at most {#limit}',
+      }),
 
     tag: Joi.string()
-      .default('')
+      .optional()
       .valid(...TAGS)
       .messages({
         'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,
         'string.base': '`tag` must be a string',
       }),
 
-    search: Joi.string().default('').messages({
+    search: Joi.string().optional().default('').messages({
       'string.base': '`search` must be a string',
     }),
   }),
@@ -36,24 +43,24 @@ export const getAllNotesSchema = {
 
 export const noteIdSchema = {
   [Segments.PARAMS]: Joi.object({
-    noteId: Joi.string().custom(objectIdValidator).required(),
+    noteId: Joi.string().required().custom(objectIdValidator),
   }),
 };
 
 export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(1).required().messages({
+    title: Joi.string().required().min(1).messages({
       'any.required': '`title` is required',
       'string.base': '`title` must be a string',
       'string.min': '`title` should have at least {#limit} characters',
     }),
 
-    content: Joi.string().default('').min(1).default(10).messages({
+    content: Joi.string().optional().default('').messages({
       'string.base': '`content` must be a string',
     }),
 
     tag: Joi.string()
-      .default('')
+      .optional()
       .valid(...TAGS)
       .messages({
         'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,
@@ -68,18 +75,17 @@ export const updateNoteSchema = {
   }),
 
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(1).required().messages({
-      'any.required': '`title` is required',
+    title: Joi.string().optional().min(1).messages({
       'string.base': '`title` must be a string',
       'string.min': '`title` should have at least {#limit} characters',
     }),
 
-    content: Joi.string().default('').min(1).default(10).messages({
+    content: Joi.string().optional().messages({
       'string.base': '`content` must be a string',
     }),
 
     tag: Joi.string()
-      .default('')
+      .optional()
       .valid(...TAGS)
       .messages({
         'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,

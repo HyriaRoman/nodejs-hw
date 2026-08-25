@@ -1,5 +1,11 @@
 import { Joi, Segments } from 'celebrate';
 import { TAGS } from '../constants/tags.js';
+import { isValidObjectId } from 'mongoose';
+
+function objectIdValidator(value, helpers) {
+  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+};
+
 
 export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
@@ -26,5 +32,11 @@ export const getAllNotesSchema = {
     search: Joi.string().default('').messages({
       'string.base': '`search` must be a string',
     }),
+  }),
+};
+
+export const noteIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    noteId: Joi.string().custom(objectIdValidator).required(),
   }),
 };

@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import createHttpError from 'http-errors';
 
 import { Note } from '../models/note.js';
@@ -40,16 +39,7 @@ export async function getAllNotes(req, res) {
 export async function getNoteById(req, res) {
   const { noteId } = req.params;
 
-  // This is done to catch invalid note ids, and respond with
-  // "404 Not Found" instead of "500 Internal Error"
-  let noteObjectId;
-  try {
-    noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch {
-    throw createHttpError(404, 'Note not found');
-  }
-
-  const note = await Note.findById(noteObjectId);
+  const note = await Note.findById(noteId);
 
   if (!note) {
     throw createHttpError(404, 'Note not found');
@@ -66,17 +56,8 @@ export async function createNote(req, res) {
 export async function deleteNote(req, res) {
   const { noteId } = req.params;
 
-  // This is done to catch invalid note ids, and respond with
-  // "404 Not Found" instead of "500 Internal Error"
-  let noteObjectId;
-  try {
-    noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch {
-    throw createHttpError(404, 'Note not found');
-  }
-
   const note = await Note.findOneAndDelete({
-    _id: noteObjectId,
+    _id: noteId,
   });
 
   if (!note) {
@@ -89,18 +70,9 @@ export async function deleteNote(req, res) {
 export async function updateNote(req, res) {
   const { noteId } = req.params;
 
-  // This is done to catch invalid note ids, and respond with
-  // "404 Not Found" instead of "500 Internal Error"
-  let noteObjectId;
-  try {
-    noteObjectId = new mongoose.Types.ObjectId(noteId);
-  } catch {
-    throw createHttpError(404, 'Note not found');
-  }
-
   const note = await Note.findOneAndUpdate(
     {
-      _id: noteObjectId,
+      _id: noteId,
     },
     req.body,
     { returnDocument: 'after' },

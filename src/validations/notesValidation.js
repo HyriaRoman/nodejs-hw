@@ -61,3 +61,34 @@ export const createNoteSchema = {
       }),
   }),
 };
+
+export const updateNoteSchema = {
+  [Segments.PARAMS]: Joi.object({
+    noteId: Joi.string().custom(objectIdValidator).required(),
+  }),
+
+  [Segments.BODY]: Joi.object({
+    title: Joi.string().min(1).required().messages({
+      'any.required': '`title` is required',
+      'string.base': '`title` must be a string',
+      'string.min': '`title` should have at least {#limit} characters',
+    }),
+
+    content: Joi.string().default('').min(1).default(10).messages({
+      'string.base': '`content` must be a string',
+    }),
+
+    tag: Joi.string()
+      .default('')
+      .valid(...TAGS)
+      .messages({
+        'any.only': `\`tag\` must be one of: ${TAGS.join(', ')}`,
+        'string.base': '`tag` must be a string',
+      }),
+  })
+    .min(1)
+    .messages({
+      'object.min':
+        'At least one of `title`, `content` or `tag` must be present',
+    }),
+};

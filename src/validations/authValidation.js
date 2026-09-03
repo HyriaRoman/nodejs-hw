@@ -24,7 +24,7 @@ export const loginUserSchema = {
       'string.email': '`email` must be a valid email address',
     }),
 
-    password: Joi.string().required().min(8).messages({
+    password: Joi.string().required().messages({
       'any.required': '`password` is required',
       'string.base': '`password` must be a string',
       'string.min': '`password` should have at least {#limit} characters',

@@ -1,5 +1,5 @@
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time';
-import { Session } from '../models/session';
+import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
+import { Session } from '../models/session.js';
 
 export function createSession(userId) {
   const accessToken = crypto.randomUUID();

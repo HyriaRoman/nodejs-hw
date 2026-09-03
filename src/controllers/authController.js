@@ -46,7 +46,7 @@ export async function loginUser(req, res) {
 
   setSessionCookies(res, newSession);
 
-  res.status(201).json(user);
+  res.status(200).json(user);
 }
 
 export async function refreshUserSession(req, res) {

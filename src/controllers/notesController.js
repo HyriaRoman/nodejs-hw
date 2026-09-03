@@ -5,7 +5,9 @@ import { Note } from '../models/note.js';
 export async function getAllNotes(req, res) {
   const { page = 1, perPage = 10, tag = '', search = '' } = req.query;
   const skip = Math.max(0, (page - 1) * perPage);
-  const query = Note.find();
+  const query = Note.find({
+    userId: req.user._id,
+  });
 
   if (tag) {
     query.where('tag').equals(tag);
@@ -39,7 +41,10 @@ export async function getAllNotes(req, res) {
 export async function getNoteById(req, res) {
   const { noteId } = req.params;
 
-  const note = await Note.findById(noteId);
+  const note = await Note.findOne({
+    _id: noteId,
+    userId: req.user._id,
+  });
 
   if (!note) {
     throw createHttpError(404, 'Note not found');
@@ -49,7 +54,10 @@ export async function getNoteById(req, res) {
 }
 
 export async function createNote(req, res) {
-  const note = await Note.create(req.body);
+  const note = await Note.create({
+    ...req.body,
+    userId: req.user._id,
+  });
   res.status(201).json(note);
 }
 
@@ -58,6 +66,7 @@ export async function deleteNote(req, res) {
 
   const note = await Note.findOneAndDelete({
     _id: noteId,
+    userId: req.user._id,
   });
 
   if (!note) {
@@ -73,6 +82,7 @@ export async function updateNote(req, res) {
   const note = await Note.findOneAndUpdate(
     {
       _id: noteId,
+      userId: req.user._id,
     },
     req.body,
     { returnDocument: 'after' },

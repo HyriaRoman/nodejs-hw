@@ -9,7 +9,7 @@ import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
 import jsonwebtoken from 'jsonwebtoken';
-import { sendEmail } from '../utils/sendEmail.js';
+import { sendEmail } from '../utils/sendMail.js';
 
 // We do this here so we don't have to re-read the file on every request
 const emailTemplatePath = path.resolve(

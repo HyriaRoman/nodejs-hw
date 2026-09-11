@@ -11,6 +11,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 
 import authRouter from './routes/authRoutes.js';
 import notesRouter from './routes/notesRoutes.js';
+import usersRouter from './routes/userRoutes.js';
 import { errors } from 'celebrate';
 
 const PORT = process.env.PORT ?? 3000;
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 app.use(authRouter);
 app.use(notesRouter);
+app.use(usersRouter);
 
 app.use(notFoundHandler);
 app.use(errors());

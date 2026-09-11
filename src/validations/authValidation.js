@@ -31,3 +31,13 @@ export const loginUserSchema = {
     }),
   }),
 };
+
+export const requestResetEmailSchema = {
+  [Segments.BODY]: Joi.object({
+    email: Joi.string().email().required().messages({
+      'any.required': '`email` is required',
+      'string.base': '`email` must be a string',
+      'string.email': '`email` must be a valid email address',
+    }),
+  }),
+};
